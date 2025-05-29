@@ -11,6 +11,19 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+    - name: Lint shell scripts
+      uses: koalaman/shellcheck@v1
+      with:
+        files: docker/entrypoint.sh
+
+    - name: Lint YAML files
+      uses: ibiqlik/action-yamllint@v1
+      with:
+        files: |
+          compose/docker-compose.yml
+          config/xrdp.ini
+          config/sesman.ini
+          
     - name: Checkout repository
       uses: koalaman/shellcheck@v1
 
