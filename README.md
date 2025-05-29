@@ -18,7 +18,7 @@
 
 ### 1. Клонируйте репозиторий:
 
-git clone https://github.com/your-user/free-rdp.git
+git clone https://github.com/bludzetelksina/free-rdp.git
 cd free-rdp
 
 ### 2. Настройте переменные:
