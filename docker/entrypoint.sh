@@ -1,25 +1,28 @@
 #!/bin/bash
 set -e
 
-# Проверяем, запущен ли xrdp-sesman, если да — не запускаем второй раз
-if pgrep -x "xrdp-sesman" > /dev/null; then
-    echo "xrdp-sesman is already running."
-else
-    # Удаляем возможный stale pid файл и запускаем sesman
-    if [ -f /var/run/xrdp/xrdp-sesman.pid ]; then
-        rm -f /var/run/xrdp/xrdp-sesman.pid
-    fi
-    service xrdp-sesman start
+# Проверяем и удаляем stale pid файл, если есть
+if [ -f /var/run/xrdp/xrdp-sesman.pid ]; then
+    rm -f /var/run/xrdp/xrdp-sesman.pid
 fi
 
-# Аналогично для xrdp
-if pgrep -x "xrdp" > /dev/null; then
-    echo "xrdp is already running."
+# Запускаем xrdp-sesman вручную в фоне, если он не запущен
+if ! pgrep -x "xrdp-sesman" > /dev/null; then
+    xrdp-sesman &
+    echo "xrdp-sesman started"
 else
-    service xrdp start
+    echo "xrdp-sesman is already running"
 fi
 
-# Настраиваем VNC пароль, если еще не установлен
+# Запускаем xrdp через systemctl или service, либо вручную
+if ! pgrep -x "xrdp" > /dev/null; then
+    service xrdp start || /usr/sbin/xrdp
+    echo "xrdp started"
+else
+    echo "xrdp is already running"
+fi
+
+# Настраиваем VNC пароль, если не установлен
 if [ ! -f /root/.vnc/passwd ]; then
     mkdir -p /root/.vnc
     echo "1234" | vncpasswd -f > /root/.vnc/passwd
@@ -31,3 +34,4 @@ vncserver :1 -geometry 1280x800 -depth 24
 
 # Чтобы контейнер не завершился — держим процесс в фоне
 tail -f /dev/null
+
