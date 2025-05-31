@@ -2,19 +2,29 @@
 FROM ubuntu:22.04
 
 # Обновляем систему и устанавливаем необходимые пакеты
-RUN apt-get update && apt-get install -y \
-    xrdp \
-    xorgxrdp \
-    xfce4 \
-    xfce4-terminal \
-    tightvncserver \
-    firefox \
-    wget \
-    curl \
-    ca-certificates \
-    supervisor \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/*
+RUN apt-get update && apt-get install -y xrdp
+
+RUN apt-get update && apt-get install -y xorgxrdp
+
+RUN apt-get update && apt-get install -y xfce4
+
+RUN apt-get update && apt-get install -y xfce4-terminal
+
+RUN apt-get update && apt-get install -y tightvncserver
+
+RUN apt-get update && apt-get install -y firefox
+
+RUN apt-get update && apt-get install -y wget
+
+RUN apt-get update && apt-get install -y curl
+
+RUN apt-get update && apt-get install -y ca-certificates
+
+RUN apt-get update && apt-get install -y supervisor
+
+RUN apt-get update && apt-get clean
+
+RUN apt-get update && rm -rf /var/lib/apt/lists/*
 
 # Настраиваем xfce как сессию по умолчанию для xrdp
 RUN echo "startxfce4" > /etc/skel/.xsession \
