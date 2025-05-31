@@ -1,6 +1,9 @@
 # Используем официальный образ Ubuntu 22.04 в качестве базы
 FROM ubuntu:22.04
 
+# Отключаем интерактивный режим
+ENV DEBIAN_FRONTEND=noninteractive
+
 # Обновляем систему и устанавливаем необходимые пакеты
 RUN apt-get update && apt-get install -y xrdp
 
