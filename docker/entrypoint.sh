@@ -1,39 +1,37 @@
-#!/bin/bash
-set -e
+FROM ubuntu:22.04
 
-# Устанавливаем USER для vncserver
-export USER=root
+ENV DEBIAN_FRONTEND=noninteractive
+ENV TZ=Etc/UTC
 
-# Удаляем stale pid-файл, если есть
-if [ -f /var/run/xrdp/xrdp-sesman.pid ]; then
-    rm -f /var/run/xrdp/xrdp-sesman.pid
-fi
+# Устанавливаем timezone и нужные пакеты в одном RUN, отключая интерактивность
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends tzdata && \
+    ln -fs /usr/share/zoneinfo/$TZ /etc/localtime && \
+    echo $TZ > /etc/timezone && \
+    dpkg-reconfigure -f noninteractive tzdata && \
+    apt-get install -y --no-install-recommends \
+        xrdp \
+        xorgxrdp \
+        xfce4 \
+        xfce4-terminal \
+        tightvncserver \
+        xfonts-base \
+        firefox \
+        wget \
+        curl \
+        ca-certificates \
+        supervisor && \
+    apt-get clean && rm -rf /var/lib/apt/lists/*
 
-# Запускаем xrdp-sesman в фоне, если не запущен
-if ! pgrep -x "xrdp-sesman" > /dev/null; then
-    xrdp-sesman &
-    echo "xrdp-sesman started"
-else
-    echo "xrdp-sesman is already running"
-fi
+RUN echo "startxfce4" > /etc/skel/.xsession && \
+    echo "startxfce4" > /root/.xsession
 
-# Запускаем xrdp, если не запущен
-if ! pgrep -x "xrdp" > /dev/null; then
-    service xrdp start || /usr/sbin/xrdp
-    echo "xrdp started"
-else
-    echo "xrdp is already running"
-fi
+COPY config/xrdp.ini /etc/xrdp/xrdp.ini
+COPY config/sesman.ini /etc/xrdp/sesman.ini
 
-# Настраиваем пароль VNC, если нет
-if [ ! -f /root/.vnc/passwd ]; then
-    mkdir -p /root/.vnc
-    echo "1234" | vncpasswd -f > /root/.vnc/passwd
-    chmod 600 /root/.vnc/passwd
-fi
+COPY docker/entrypoint.sh /usr/local/bin/entrypoint.sh
+RUN chmod +x /usr/local/bin/entrypoint.sh
 
-# Запускаем VNC сервер
-vncserver :1 -geometry 1280x800 -depth 24
+EXPOSE 3389 5901
 
-# Чтобы контейнер не завершился — держим процесс в фоне
-tail -f /dev/null
+ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
