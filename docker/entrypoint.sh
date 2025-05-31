@@ -1,10 +1,20 @@
 #!/bin/bash
+set -e
 
-adduser --disabled-password --gecos "" $USERNAME
-echo "$USERNAME:$PASSWORD" | chpasswd
-adduser $USERNAME sudo
+# Запускаем xrdp и sesman
+service xrdp start
+service xrdp-sesman start
 
-/etc/init.d/dbus start
-/etc/init.d/xrdp start
+# Запускаем VNC сервер на дисплее :1
+# Устанавливаем пароль по умолчанию, если нет
+if [ ! -f /root/.vnc/passwd ]; then
+    mkdir -p /root/.vnc
+    echo "1234" | vncpasswd -f > /root/.vnc/passwd
+    chmod 600 /root/.vnc/passwd
+fi
 
-tail -f /var/log/xrdp.log
+# Запускаем VNC сервер (xfce) на дисплее :1
+vncserver :1 -geometry 1280x800 -depth 24
+
+# Чтобы контейнер не завершился — держим процесс в фоне
+tail -f /dev/null
