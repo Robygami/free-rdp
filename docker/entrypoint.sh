@@ -4,6 +4,10 @@ set -e
 # Устанавливаем USER для vncserver
 export USER=root
 
+# Запускаем xrdp и sesman
+service xrdp start
+service xrdp-sesman start
+
 # Удаляем stale pid-файл, если есть
 if [ -f /var/run/xrdp/xrdp-sesman.pid ]; then
     rm -f /var/run/xrdp/xrdp-sesman.pid
@@ -34,6 +38,10 @@ fi
 
 # Запускаем VNC сервер
 vncserver :1 -geometry 1280x800 -depth 24
+
+# Запуск noVNC через websockify (VNC -> WebSocket)
+# noVNC будет доступен на порту 6080
+/opt/novnc/utils/launch.sh --vnc localhost:5901 &
 
 # Чтобы контейнер не завершился — держим процесс в фоне
 tail -f /dev/null
