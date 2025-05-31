@@ -4,10 +4,6 @@ set -e
 # Устанавливаем USER для vncserver
 export USER=root
 
-# Запускаем xrdp и sesman
-service xrdp start
-service xrdp-sesman start
-
 # Удаляем stale pid-файл, если есть
 if [ -f /var/run/xrdp/xrdp-sesman.pid ]; then
     rm -f /var/run/xrdp/xrdp-sesman.pid
