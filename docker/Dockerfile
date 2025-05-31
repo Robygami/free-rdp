@@ -14,8 +14,7 @@ RUN apt-get update && \
 
 # Клонируем noVNC и websockify
 RUN git clone https://github.com/novnc/noVNC.git /opt/novnc && \
-    git clone https://github.com/novnc/websockify /opt/novnc/utils/websockify && \
-    ln -s /opt/novnc/vnc_lite.html /opt/novnc/index.html
+    git clone https://github.com/novnc/websockify /opt/novnc/utils/websockify
 
 # Устанавливаем timezone и нужные пакеты в одном RUN, отключая интерактивность
 RUN apt-get update && \
