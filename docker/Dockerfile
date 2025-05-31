@@ -23,6 +23,20 @@ RUN apt-get update && \
         supervisor && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
 
+# Устанавливаем git и Python (для websockify)
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+        git \
+        python3 \
+        python3-websockify \
+        novnc && \
+    apt-get clean && rm -rf /var/lib/apt/lists/*
+
+# Клонируем noVNC и websockify
+RUN git clone https://github.com/novnc/noVNC.git /opt/novnc && \
+    git clone https://github.com/novnc/websockify /opt/novnc/utils/websockify && \
+    ln -s /opt/novnc/vnc_lite.html /opt/novnc/index.html
+
 RUN echo "startxfce4" > /etc/skel/.xsession && \
     echo "startxfce4" > /root/.xsession
 
