@@ -3,33 +3,30 @@ FROM ubuntu:22.04
 ENV DEBIAN_FRONTEND=noninteractive
 ENV TZ=Etc/UTC
 
-RUN apt-get update && apt-get install -y tzdata && ln -fs /usr/share/zoneinfo/Etc/UTC /etc/localtime && dpkg-reconfigure --frontend noninteractive tzdata
+# Обновляем и устанавливаем tzdata с настройкой часового пояса
+RUN apt-get update && apt-get install -y tzdata && \
+    ln -fs /usr/share/zoneinfo/$TZ /etc/localtime && \
+    echo $TZ > /etc/timezone
 
-RUN apt-get update && apt-get install -y xrdp
+# Обновляем и устанавливаем все необходимые пакеты в одном RUN
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    xrdp \
+    xorgxrdp \
+    xfce4 \
+    xfce4-terminal \
+    tightvncserver \
+    firefox \
+    wget \
+    curl \
+    ca-certificates \
+    supervisor && \
+    apt-get clean && rm -rf /var/lib/apt/lists/*
 
-RUN apt-get update && apt-get install -y xorgxrdp
-
-RUN apt-get update && apt-get install -y xfce4
-
-RUN apt-get update && apt-get install -y xfce4-terminal
-
-RUN apt-get update && apt-get install -y tightvncserver
-
-RUN apt-get update && apt-get install -y firefox
-
-RUN apt-get update && apt-get install -y wget
-
-RUN apt-get update && apt-get install -y curl
-
-RUN apt-get update && apt-get install -y ca-certificates
-
-RUN apt-get update && apt-get install -y supervisor
-
-RUN apt-get update && apt-get clean && rm -rf /var/lib/apt/lists/*
-
+# Настройка XFCE для xrdp
 RUN echo "startxfce4" > /etc/skel/.xsession && \
     echo "startxfce4" > /root/.xsession
 
+# Копируем конфиги и entrypoint
 COPY config/xrdp.ini /etc/xrdp/xrdp.ini
 COPY config/sesman.ini /etc/xrdp/sesman.ini
 
