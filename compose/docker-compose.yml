@@ -1,18 +1,16 @@
-version: '3.9'
+version: '3.8'
 
 services:
-  free-rdp:
+  freerdp:
     build:
-      context: .
+      context: ../
       dockerfile: docker/Dockerfile
+    container_name: freerdp_container
     ports:
-      - "3389:3389"
+      - "3389:3389"   # RDP
+      - "5901:5901"   # VNC
     environment:
-      - USERNAME=${USERNAME}
-      - PASSWORD=${PASSWORD}
-      - UID=${UID}
-      - GID=${GID}
-      - TZ=${TZ}
+      - TZ=Europe/Moscow
     volumes:
-      - ./shared/user-data:/home/${USERNAME}/shared
+      - ../shared/user-data:/home/user/shared
     restart: unless-stopped
