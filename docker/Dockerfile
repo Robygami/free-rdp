@@ -15,6 +15,7 @@ RUN apt-get update && \
         xfce4 \
         xfce4-terminal \
         tightvncserver \
+        xfonts-base \
         firefox \
         wget \
         curl \
