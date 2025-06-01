@@ -32,7 +32,7 @@ vncserver :1 -geometry 1280x800 -depth 24
 
 # Запускаем noVNC через websockify на порту 6080
 echo "Starting noVNC on http://localhost:6080"
-/opt/novnc/utils/launch.sh --vnc localhost:5901 &
+/opt/novnc/utils/launch.sh --vnc 127.0.0.1:5901 &
 
 # Чтобы контейнер не завершился, выводим лог VNC сервера
 tail -f /root/.vnc/*:1.log
