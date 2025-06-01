@@ -10,9 +10,9 @@ RUN apt-get update && \
         python3 \
         python3-pip \
         tzdata && \
-    ln -fs /usr/share/zoneinfo/$TZ /etc/localtime && \
-    echo $TZ > /etc/timezone && \
-    dpkg-reconfigure -f noninteractive tzdata && \
+    rm -rf /var/lib/apt/lists/*
+
+RUN apt-get update && \
     apt-get install -y --no-install-recommends \
         xrdp \
         xorgxrdp \
@@ -45,7 +45,7 @@ RUN apt-get update && \
     dpkg-reconfigure -f noninteractive tzdata && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
 
-    
+
 # Клонируем noVNC и websockify
 RUN git clone https://github.com/novnc/noVNC.git /opt/novnc && \
     git clone https://github.com/novnc/websockify /opt/novnc/utils/websockify && \
