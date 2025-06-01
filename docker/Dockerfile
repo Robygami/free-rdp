@@ -3,6 +3,10 @@ FROM ubuntu:22.04
 ENV DEBIAN_FRONTEND=noninteractive
 ENV TZ=Etc/UTC
 
+# Клонируем noVNC и websockify (последние версии)
+RUN git clone https://github.com/novnc/noVNC.git /opt/novnc && \
+    git clone https://github.com/novnc/websockify.git /opt/websockify
+
 # Устанавливаем git, python3, python3-pip (для websockify), noVNC из репо может быть старым, лучше ставить из git
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
@@ -26,10 +30,6 @@ RUN apt-get update && \
         ca-certificates \
         supervisor && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
-
-# Клонируем noVNC и websockify (последние версии)
-RUN git clone https://github.com/novnc/noVNC.git /opt/novnc && \
-    git clone https://github.com/novnc/websockify.git /opt/websockify
 
 # Устанавливаем websockify через pip (рекомендуется для корректной работы)
 RUN pip3 install /opt/websockify
