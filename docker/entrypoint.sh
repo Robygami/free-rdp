@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-export USER=root  # Добавлено, чтобы vncserver не жаловался на отсутствие USER
+export USER=root
 
 cleanup_stale_files() {
     if [ -f /tmp/.X1-lock ]; then
@@ -17,7 +17,11 @@ cleanup_stale_files() {
 
 cleanup_stale_files
 
+echo "Starting xrdp service..."
 service xrdp start
+
+echo "Checking xrdp status..."
+service xrdp status
 
 if [ ! -f /root/.vnc/passwd ]; then
     mkdir -p /root/.vnc
@@ -32,7 +36,7 @@ fi
 vncserver -kill :1 || true
 vncserver :1 -geometry 1280x800 -depth 24
 
-echo "Waiting for VNC server to start on port 5901..."
+echo "Waiting for VNC server on port 5901..."
 timeout=15
 while ! nc -z 127.0.0.1 5901; do
     sleep 1
@@ -44,11 +48,12 @@ while ! nc -z 127.0.0.1 5901; do
 done
 echo "VNC server started on port 5901"
 
-echo "Starting noVNC on http://localhost:6080"
-/opt/novnc/utils/launch.sh --vnc 127.0.0.1:5901 &
+echo "Starting noVNC on port 6080..."
+/opt/novnc/utils/launch.sh --vnc 127.0.0.1:5901 --listen 6080 --web /opt/novnc &
 
-echo "Starting Chrome Remote Desktop Host"
-export DISPLAY=:1
-/opt/google/chrome-remote-desktop/start-host --code="4/0AUJR-x4i1OGn1xewnNngVQ84OqCuGLa7svSmFqz3OoglKoeOYo0rEk1DHf1If3O18wHkpg" --redirect-url="https://remotedesktop.google.com/_/oauthredirect" --name=$(hostname) &
+# Временно закомментировал запуск Chrome Remote Desktop для отладки
+# echo "Starting Chrome Remote Desktop Host"
+# export DISPLAY=:1
+# /opt/google/chrome-remote-desktop/start-host --code="..." --redirect-url="https://remotedesktop.google.com/_/oauthredirect" --name=$(hostname) &
 
 tail -f /root/.vnc/*:1.log
