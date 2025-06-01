@@ -3,13 +3,9 @@ FROM ubuntu:22.04
 ENV DEBIAN_FRONTEND=noninteractive
 ENV TZ=Etc/UTC
 
-# Устанавливаем git, python3, python3-pip, tzdata и остальные пакеты
+# Устанавливаем timezone и нужные пакеты в одном RUN, отключая интерактивность
 RUN apt-get update && \
-    apt-get install -y --no-install-recommends \
-        git \
-        python3 \
-        python3-pip \
-        tzdata && \
+    apt-get install -y --no-install-recommends tzdata && \
     ln -fs /usr/share/zoneinfo/$TZ /etc/localtime && \
     echo $TZ > /etc/timezone && \
     dpkg-reconfigure -f noninteractive tzdata && \
@@ -19,7 +15,6 @@ RUN apt-get update && \
         xfce4 \
         xfce4-terminal \
         tightvncserver \
-        xfonts-base \
         firefox \
         wget \
         curl \
@@ -27,14 +22,20 @@ RUN apt-get update && \
         supervisor && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
 
-# Клонируем noVNC и websockify (последние версии)
+# Устанавливаем git и Python (для websockify)
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+        git \
+        python3 \
+        python3-websockify \
+        novnc && \
+    apt-get clean && rm -rf /var/lib/apt/lists/*
+
+# Клонируем noVNC и websockify
 RUN git clone https://github.com/novnc/noVNC.git /opt/novnc && \
-    git clone https://github.com/novnc/websockify.git /opt/websockify
+    git clone https://github.com/novnc/websockify /opt/novnc/utils/websockify && \
+    ln -s /opt/novnc/vnc_lite.html /opt/novnc/index.html
 
-# Устанавливаем websockify через pip (рекомендуется для корректной работы)
-RUN pip3 install /opt/websockify
-
-# Настраиваем XFCE как сессию по умолчанию
 RUN echo "startxfce4" > /etc/skel/.xsession && \
     echo "startxfce4" > /root/.xsession
 
