@@ -55,11 +55,25 @@ noVNC (через браузер): http://localhost:6080
 
 Измените параметры подключения, имя пользователя, порты и дистрибутив в файле .env.
 
-## 🧪 Тестировано
+🧪 Поддерживаемые клиенты
 
-- ✅ Windows: через mstsc (RDP) и VNC Viewer
-- ✅ Linux: через Remmina, KRDC
-- ✅ Android: Microsoft Remote Desktop, VNC Viewer
+Windows: mstsc (встроенный клиент)
+https://www.microsoft.com/en-gb/download/details.aspx?id=50042
+
+Windows: VNC Viewer
+https://www.realvnc.com/
+
+Linux: Remmina
+https://remmina.org/
+
+Linux: KRDC
+https://apps.kde.org/krdc/
+
+Android: Microsoft Remote Desktop
+https://play.google.com/store/apps/details?id=com.microsoft.rdc.android
+
+Android: VNC Viewer
+https://play.google.com/store/apps/details?id=com.realvnc.viewer.android
 
 ## 📄 Лицензия
 
