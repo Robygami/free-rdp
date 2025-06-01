@@ -31,12 +31,6 @@ RUN apt-get update && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
 
 
-# Устанавливаем noVNC (для websockify)
-RUN apt-get update && \
-    apt-get install -y --no-install-recommends \
-        novnc && \
-    apt-get clean && rm -rf /var/lib/apt/lists/*
-
 # Клонируем noVNC и websockify
 RUN git clone https://github.com/novnc/noVNC.git /opt/novnc && \
     git clone https://github.com/novnc/websockify /opt/novnc/utils/websockify && \
