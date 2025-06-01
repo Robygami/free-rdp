@@ -3,12 +3,17 @@ FROM ubuntu:22.04
 ENV DEBIAN_FRONTEND=noninteractive
 ENV TZ=Etc/UTC
 
+# Устанавливаем git, python3, python3-pip, tzdata и остальные пакеты
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
         git \
         python3 \
         python3-pip \
-        tzdata \
+        tzdata && \
+    ln -fs /usr/share/zoneinfo/$TZ /etc/localtime && \
+    echo $TZ > /etc/timezone && \
+    dpkg-reconfigure -f noninteractive tzdata && \
+    apt-get install -y --no-install-recommends \
         xrdp \
         xorgxrdp \
         xfce4 \
