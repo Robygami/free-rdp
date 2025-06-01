@@ -5,29 +5,35 @@ ENV TZ=Etc/UTC
 
 # Устанавливаем timezone и нужные пакеты в одном RUN, отключая интерактивность
 RUN apt-get update && \
-    apt-get install -y --no-install-recommends tzdata && \
-    ln -fs /usr/share/zoneinfo/$TZ /etc/localtime && \
-    echo $TZ > /etc/timezone && \
-    dpkg-reconfigure -f noninteractive tzdata && \
     apt-get install -y --no-install-recommends \
+        git \
+        python3 \
+        python3-pip \
+        tzdata \
         xrdp \
         xorgxrdp \
         xfce4 \
         xfce4-terminal \
         tightvncserver \
+        xfonts-base \
+        xfonts-75dpi \
+        xfonts-100dpi \
+        xfonts-scalable \
+        xfonts-cyrillic \
         firefox \
         wget \
         curl \
         ca-certificates \
         supervisor && \
+    ln -fs /usr/share/zoneinfo/$TZ /etc/localtime && \
+    echo $TZ > /etc/timezone && \
+    dpkg-reconfigure -f noninteractive tzdata && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
 
-# Устанавливаем git и Python (для websockify)
+
+# Устанавливаем noVNC (для websockify)
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
-        git \
-        python3 \
-        python3-websockify \
         novnc && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
 
