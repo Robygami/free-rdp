@@ -14,13 +14,14 @@ RUN apt-get update && \
 
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
+        git \
+        python3 \
+        python3-pip \
+        tzdata \
         xrdp \
         xorgxrdp \
         xfce4 \
         xfce4-terminal \
-
-RUN apt-get update && \
-    apt-get install -y --no-install-recommends \
         tightvncserver \
         xfonts-base \
         xfonts-75dpi \
@@ -31,18 +32,7 @@ RUN apt-get update && \
         wget \
         curl \
         ca-certificates \
-        supervisor \
-        netcat \
-        libnss3 \
-        libx11-xcb1 \
-        libxcomposite1 \
-        libxcursor1 \
-        libxdamage1 \
-        libxrandr2 \
-        libgbm1 \
-        libasound2 \
-        libpangocairo-1.0-0 \
-        libgtk-3-0 && \
+        supervisor && \
     ln -fs /usr/share/zoneinfo/$TZ /etc/localtime && \
     echo $TZ > /etc/timezone && \
     dpkg-reconfigure -f noninteractive tzdata && \
