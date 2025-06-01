@@ -18,6 +18,9 @@ RUN apt-get update && \
         xorgxrdp \
         xfce4 \
         xfce4-terminal \
+
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
         tightvncserver \
         xfonts-base \
         xfonts-75dpi \
