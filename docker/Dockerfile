@@ -45,11 +45,7 @@ RUN apt-get update && \
     dpkg-reconfigure -f noninteractive tzdata && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
 
-# Устанавливаем Chrome Remote Desktop
-RUN wget https://dl.google.com/linux/direct/chrome-remote-desktop_current_amd64.deb && \
-    apt-get update && apt-get install -y ./chrome-remote-desktop_current_amd64.deb && \
-    rm chrome-remote-desktop_current_amd64.deb
-
+    
 # Клонируем noVNC и websockify
 RUN git clone https://github.com/novnc/noVNC.git /opt/novnc && \
     git clone https://github.com/novnc/websockify /opt/novnc/utils/websockify && \
