@@ -25,15 +25,16 @@ if [ ! -f /root/.vnc/passwd ]; then
     chmod 600 /root/.vnc/passwd
 fi
 
-vncserver -kill :1 || true
+if [ ! -f /root/.Xresources ]; then
+    touch /root/.Xresources
+fi
 
-# Запускаем VNC сервер
+vncserver -kill :1 || true
 vncserver :1 -geometry 1280x800 -depth 24
 
-# Ждем, пока VNC сервер откроет порт 5901 (до 10 секунд)
 echo "Waiting for VNC server to start on port 5901..."
-timeout=10
-while ! nc -z localhost 5901; do
+timeout=15
+while ! nc -z 127.0.0.1 5901; do
     sleep 1
     timeout=$((timeout - 1))
     if [ $timeout -le 0 ]; then
@@ -45,5 +46,9 @@ echo "VNC server started on port 5901"
 
 echo "Starting noVNC on http://localhost:6080"
 /opt/novnc/utils/launch.sh --vnc 127.0.0.1:5901 &
+
+echo "Starting Chrome Remote Desktop Host"
+export DISPLAY=:1
+/opt/google/chrome-remote-desktop/start-host --code="4/0AUJR-x4i1OGn1xewnNngVQ84OqCuGLa7svSmFqz3OoglKoeOYo0rEk1DHf1If3O18wHkpg" --redirect-url="https://remotedesktop.google.com/_/oauthredirect" --name=$(hostname) &
 
 tail -f /root/.vnc/*:1.log
