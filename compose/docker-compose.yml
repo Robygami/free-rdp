@@ -9,6 +9,7 @@ services:
     ports:
       - "3389:3389"   # RDP
       - "5901:5901"   # VNC
+      - "6080:6080"   # noVNC (через браузер)
     environment:
       - TZ=Europe/Moscow
     volumes:
