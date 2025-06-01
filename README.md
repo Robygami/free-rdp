@@ -30,7 +30,7 @@ Docker-контейнер для быстрого запуска удалённ�
 
 ```bash
 cd compose
-docker build -t freerdp .
+docker-compose up --build
 docker run -d -p 3389:3389 -p 5901:5901 -p 6080:6080 --name freerdp freerdp
 ```
 Порты:
