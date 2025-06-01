@@ -1,15 +1,14 @@
 #!/bin/bash
 set -e
 
-# Функция для проверки и удаления stale lock-файлов и PID-файлов
+export USER=root  # Добавлено, чтобы vncserver не жаловался на отсутствие USER
+
 cleanup_stale_files() {
     if [ -f /tmp/.X1-lock ]; then
         echo "Removing stale X11 lock file /tmp/.X1-lock"
         rm -f /tmp/.X1-lock
     fi
-    # Удаляем все VNC PID файлы для дисплея :1 (может быть несколько вариантов имен)
     find /root/.vnc/ -name "*:1.pid" -exec rm -f {} \; 2>/dev/null && echo "Removed stale VNC PID files"
-    
     if [ -f /var/run/xrdp/xrdp-sesman.pid ]; then
         echo "Removing stale xrdp-sesman PID file"
         rm -f /var/run/xrdp/xrdp-sesman.pid
@@ -18,9 +17,8 @@ cleanup_stale_files() {
 
 cleanup_stale_files
 
-# Запускаем службы xrdp и xrdp-sesman
+# Запускаем только службу xrdp, в ней запускается и sesman
 service xrdp start
-service xrdp-sesman start
 
 # Создаем пароль VNC, если его нет
 if [ ! -f /root/.vnc/passwd ]; then
