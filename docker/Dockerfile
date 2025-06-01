@@ -36,6 +36,8 @@ RUN git clone https://github.com/novnc/noVNC.git /opt/novnc && \
     git clone https://github.com/novnc/websockify /opt/novnc/utils/websockify && \
     ln -s /opt/novnc/vnc_lite.html /opt/novnc/index.html
 
+RUN apt-get update && apt-get install -y netcat
+
 RUN echo "startxfce4" > /etc/skel/.xsession && \
     echo "startxfce4" > /root/.xsession
 
