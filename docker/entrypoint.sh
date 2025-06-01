@@ -27,11 +27,13 @@ fi
 
 vncserver -kill :1 || true
 
+# Запускаем VNC сервер
 vncserver :1 -geometry 1280x800 -depth 24
 
+# Ждем, пока VNC сервер откроет порт 5901 (до 10 секунд)
 echo "Waiting for VNC server to start on port 5901..."
 timeout=10
-while ! nc -z 127.0.0.1 5901; do
+while ! nc -z localhost 5901; do
     sleep 1
     timeout=$((timeout - 1))
     if [ $timeout -le 0 ]; then
