@@ -1,6 +1,8 @@
 #!/bin/bash
 set -e
 
+export USER=root  # Добавлено, чтобы vncserver не жаловался на отсутствие USER
+
 cleanup_stale_files() {
     if [ -f /tmp/.X1-lock ]; then
         echo "Removing stale X11 lock file /tmp/.X1-lock"
