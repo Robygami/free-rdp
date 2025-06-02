@@ -33,8 +33,8 @@ RUN mkdir -p ~/.vnc && \
     chmod +x ~/.vnc/xstartup
 
 # Копирование скрипта запуска
-COPY entrypoint.sh /entrypoint.sh
-RUN chmod +x /entrypoint.sh
+COPY docker/entrypoint.sh /usr/local/bin/entrypoint.sh
+RUN chmod +x /usr/local/bin/entrypoint.sh
 
 # Порт XRDP и noVNC
 EXPOSE 3389 5901 6080
