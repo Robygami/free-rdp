@@ -1,0 +1,27 @@
+version: "3.9"
+
+services:
+  free-rdp:
+    container_name: free-rdp
+    image: bludzetelksina/free-rdp:latest
+    restart: unless-stopped
+    privileged: true
+    ports:
+      - "3389:3389"     # RDP
+      - "6080:6080"     # noVNC (Web GUI)
+      - "7681:7681"     # Web Terminal
+    environment:
+      - ENABLE_KVM=true
+      - TZ=Europe/Moscow
+    volumes:
+      - ./configs:/etc/free-rdp
+      - ./images:/var/lib/free-rdp/images
+      - ./scripts:/opt/free-rdp/scripts
+    devices:
+      - /dev/kvm:/dev/kvm
+    networks:
+      - rdp-net
+
+networks:
+  rdp-net:
+    driver: bridge
