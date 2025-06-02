@@ -4,23 +4,15 @@ FROM ubuntu:22.04
 ENV DEBIAN_FRONTEND=noninteractive
 
 # Установка зависимостей и необходимых пакетов
-RUN apt-get update && apt-get install -y \
-    xrdp \
-    xfce4 \
-    xfce4-goodies \
-    firefox \
-    wget \
-    curl \
-    sudo \
-    unzip \
-    net-tools \
-    tigervnc-standalone-server \
-    novnc \
-    websockify \
-    git \
-    x11-xserver-utils \
-    dbus-x11 \
-    && apt-get clean && rm -rf /var/lib/apt/lists/*
+RUN apt-get update && apt-get install -y xrdp xfce4 xfce4-goodies
+
+RUN apt-get update && apt-get install -y firefox wget curl
+
+RUN apt-get update && apt-get install -y sudo unzip net-tools
+
+RUN apt-get update && apt-get install -y tigervnc-standalone-server novnc websockify
+
+RUN apt-get update && apt-get install -y git x11-xserver-utils dbus-x11 && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Настройка XRDP
 RUN echo xfce4-session > ~/.xsession && \
