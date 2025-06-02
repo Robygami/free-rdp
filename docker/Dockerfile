@@ -14,10 +14,6 @@ RUN apt-get update && \
 
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
-        git \
-        python3 \
-        python3-pip \
-        tzdata \
         xrdp \
         xorgxrdp \
         xfce4 \
