@@ -1,17 +1,43 @@
 #!/bin/bash
+
 set -e
 
-# Создаём пустой файл .Xresources, чтобы не было предупреждений xrdb
-touch ~/.Xresources
+echo "[entrypoint] Запуск службы FreeRDP среды..."
 
-# Запускаем VNC сервер на дисплее :1 (порт 5901)
-vncserver :1 -geometry 1280x720 -depth 24
+# Проверка и запуск демона Docker, если он доступен
+if command -v dockerd &> /dev/null; then
+    echo "[entrypoint] Запуск Docker Daemon..."
+    dockerd > /var/log/dockerd.log 2>&1 &
+    sleep 3
+fi
 
-# Запускаем XRDP службу
-/etc/init.d/xrdp start
+# Запуск dbus (требуется для xfce4 и xrdp)
+echo "[entrypoint] Запуск D-Bus..."
+service dbus start
 
-# Запускаем noVNC (websockify) на порту 6080, перенаправляя на VNC :1 (5901)
-websockify --web=/usr/share/novnc/ 6080 localhost:5901 &
+# Настройка и запуск VNC-сервера
+echo "[entrypoint] Запуск VNC-сервера..."
+export USER=user
+export HOME=/home/$USER
+mkdir -p $HOME/.vnc
+echo "user" | vncpasswd -f > $HOME/.vnc/passwd
+chmod 600 $HOME/.vnc/passwd
+vncserver :1 -geometry 1280x800 -depth 24
 
-# Удерживаем контейнер в живом состоянии (например, через ожидание терминала)
-tail -f /dev/null
+# Запуск XRDP
+echo "[entrypoint] Запуск XRDP..."
+service xrdp start
+
+# Запуск websockify и noVNC
+echo "[entrypoint] Запуск noVNC на порту 6080..."
+/opt/novnc/utils/launch.sh --vnc localhost:5901 --listen 6080 &
+
+# Обеспечить запуск KVM и libvirtd (если возможно)
+if command -v libvirtd &> /dev/null; then
+    echo "[entrypoint] Запуск libvirtd (KVM)..."
+    service libvirtd start || true
+fi
+
+# Поддержание контейнера активным с терминалом
+echo "[entrypoint] Готово. Терминал доступен. Используйте 'docker exec -it <container> bash'"
+exec bash
