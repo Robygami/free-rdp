@@ -1,55 +1,43 @@
+# Базовый образ Ubuntu 22.04
 FROM ubuntu:22.04
 
 ENV DEBIAN_FRONTEND=noninteractive
-ENV TZ=Etc/UTC
 
-# Устанавливаем git, python3, python3-pip, tzdata и остальные пакеты
-RUN apt-get update && \
-    apt-get install -y --no-install-recommends \
-        git \
-        python3 \
-        python3-pip \
-        tzdata && \
-    rm -rf /var/lib/apt/lists/*
+# Установка зависимостей и необходимых пакетов
+RUN apt-get update && apt-get install -y \
+    xrdp \
+    xfce4 \
+    xfce4-goodies \
+    firefox \
+    wget \
+    curl \
+    sudo \
+    unzip \
+    net-tools \
+    tigervnc-standalone-server \
+    novnc \
+    websockify \
+    git \
+    x11-xserver-utils \
+    dbus-x11 \
+    && apt-get clean && rm -rf /var/lib/apt/lists/*
 
-RUN apt-get update && \
-    apt-get update && apt-get install -y --no-install-recommends xrdp 
-    
-RUN apt-get update && \
-    apt-get update && apt-get install -y --no-install-recommends xorgxrdp xfce4 xfce4-terminal
+# Настройка XRDP
+RUN echo xfce4-session > ~/.xsession && \
+    sed -i.bak '/^test -x \/etc\/X11\/Xsession/ s/^/#/' /etc/xrdp/startwm.sh && \
+    echo "exec startxfce4" >> /etc/xrdp/startwm.sh
 
-RUN apt-get update && apt-get install -y --no-install-recommends \
-        tightvncserver \
-        xfonts-base \
-        xfonts-75dpi \
-        xfonts-100dpi \
-        xfonts-scalable \
-        xfonts-cyrillic \
-        firefox \
-        wget \
-        curl \
-        ca-certificates \
-        supervisor && \
-    ln -fs /usr/share/zoneinfo/$TZ /etc/localtime && \
-    echo $TZ > /etc/timezone && \
-    dpkg-reconfigure -f noninteractive tzdata && \
-    apt-get clean && rm -rf /var/lib/apt/lists/*
+# Настройка VNC
+RUN mkdir -p ~/.vnc && \
+    echo "#!/bin/sh\nstartxfce4 &" > ~/.vnc/xstartup && \
+    chmod +x ~/.vnc/xstartup
 
+# Копирование скрипта запуска
+COPY entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
 
-# Клонируем noVNC и websockify
-RUN git clone https://github.com/novnc/noVNC.git /opt/novnc && \
-    git clone https://github.com/novnc/websockify /opt/novnc/utils/websockify && \
-    ln -s /opt/novnc/vnc_lite.html /opt/novnc/index.html
-
-RUN echo "startxfce4" > /etc/skel/.xsession && \
-    echo "startxfce4" > /root/.xsession
-
-COPY config/xrdp.ini /etc/xrdp/xrdp.ini
-COPY config/sesman.ini /etc/xrdp/sesman.ini
-
-COPY docker/entrypoint.sh /usr/local/bin/entrypoint.sh
-RUN chmod +x /usr/local/bin/entrypoint.sh
-
+# Порт XRDP и noVNC
 EXPOSE 3389 5901 6080
 
-ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
+# Запуск скрипта
+CMD ["/entrypoint.sh"]
