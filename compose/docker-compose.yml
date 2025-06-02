@@ -1,24 +1,29 @@
-version: "3.8"
+version: '3.8'
 
 services:
   freerdp:
-    container_name: freerdp-desktop
-    build:
-      context: ../
-      dockerfile: docker/Dockerfile
-    ports:
-      - "3389:3389"   # RDP
-      - "5901:5901"   # VNC
-      - "6080:6080"   # noVNC (HTTP)
-    volumes:
-      - x11-data:/tmp/.X11-unix
-      - crd-config:/etc/crd
-    environment:
-      - DISPLAY=:1
-      - USER=root
-      - PASSWORD=secret
+    image: bludzetelksina/free-rdp:latest  # Образ должен быть загружен на Docker Hub
+    container_name: freerdp
     restart: unless-stopped
+    ports:
+      - "3389:3389"   # XRDP
+      - "5901:5901"   # VNC
+      - "6080:6080"   # noVNC
+    privileged: true  # Нужен для KVM и systemd
+    environment:
+      - TZ=UTC
+    volumes:
+      - /lib/modules:/lib/modules:ro
+      - /dev:/dev
+    security_opt:
+      - seccomp:unconfined
+    networks:
+      freerdp-net:
+        ipv4_address: 172.20.0.10
 
-volumes:
-  x11-data:
-  crd-config:
+networks:
+  freerdp-net:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/24
