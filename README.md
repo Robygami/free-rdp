@@ -29,9 +29,9 @@ docker build -t freerdp:latest -f docker/Dockerfile .
 docker-compose -f compose/docker-compose.yml up -d
 
 docker run -it --rm --privileged \
-  -e NGROK_TOKEN= \
+  -e NGROK_TOKEN=2xxBhSR3e2bXieUnf4xt2fkh1Rv_38cV14iqMtLzEAMtVekXg \
   -p 3389:3389 \
-  free-rdp
+  free-rdp:lastest 
 
 ```
 
