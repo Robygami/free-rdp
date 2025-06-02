@@ -9,7 +9,6 @@ RUN apt-get update && apt-get install -y \
     novnc websockify \
     xfce4 xfce4-goodies xrdp \
     xterm sudo wget curl \
-    ttyd \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
