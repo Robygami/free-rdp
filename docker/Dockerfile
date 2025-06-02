@@ -38,8 +38,8 @@ COPY docker/entrypoint.sh /usr/local/bin/entrypoint.sh
 RUN chmod +x /usr/local/bin/entrypoint.sh
 
 # Копируем конфигурацию XRDP, если она есть
-# COPY ../config/xrdp.ini /etc/xrdp/xrdp.ini
-# COPY ../config/sesman.ini /etc/xrdp/sesman.ini
+COPY ../config/xrdp.ini /etc/xrdp/xrdp.ini
+COPY ../config/sesman.ini /etc/xrdp/sesman.ini
 
 # Порты: RDP (3389), VNC (5901), noVNC (6080)
 EXPOSE 3389 5901 6080
