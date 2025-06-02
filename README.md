@@ -25,8 +25,6 @@ cd free-rdp
 ### 2. Настройка Docker и запуск
 
 ```bash
-docker-compose up --build
-
 docker-compose up -d
 ```
 Docker автоматически загрузит образ и запустит необходимые сервисы.
