@@ -18,7 +18,7 @@
 ### 1. Сборка образа
 
 ```bash
-docker build -t freerdp:latest -f Dockerfile .
+docker build -t free-rdp:latest -f Dockerfile .
 ```
 
 ### 2. Настройка Docker и запуск
