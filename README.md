@@ -15,22 +15,6 @@
 
 ---
 
-## Структура проекта
-
-free-rdp/
-├── docker/
-│ ├── Dockerfile # Основной Dockerfile для сборки образа
-│ └── entrypoint.sh # Скрипт запуска служб
-├── config/
-│ ├── xrdp.ini # Конфигурация XRDP
-│ └── sesman.ini # Конфигурация XRDP Sesman
-├── compose/
-│ └── docker-compose.yml # Файл для запуска контейнера через Docker Compose
-├── README.md # Документация по проекту
-└── LICENSE # Лицензия проекта
-
-
----
 
 ## Быстрый старт
 
