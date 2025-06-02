@@ -30,7 +30,7 @@ service xrdp start
 
 # Запуск websockify и noVNC
 echo "[entrypoint] Запуск noVNC на порту 6080..."
-/opt/novnc/utils/launch.sh --vnc localhost:5901 --listen 6080 &
+websockify --web=/opt/novnc 6080 localhost:5901 &
 
 # Обеспечить запуск KVM и libvirtd (если возможно)
 if command -v libvirtd &> /dev/null; then
