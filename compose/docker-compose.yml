@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   freerdp:
-    image: bludzetelksina/free-rdp:latest  # Образ должен быть загружен на Docker Hub
+    image: freerdp:latest  # Образ должен быть загружен на Docker Hub
     container_name: freerdp
     restart: unless-stopped
     ports:
