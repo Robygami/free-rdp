@@ -3,7 +3,7 @@ version: "3.9"
 services:
   free-rdp:
     container_name: free-rdp
-    image: bludzetelksina/free-rdp:latest
+    image: free-rdp:latest
     restart: unless-stopped
     privileged: true
     ports:
