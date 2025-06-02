@@ -24,15 +24,9 @@
 docker build -t freerdp:latest -f docker/Dockerfile .
 ```
 
-Запуск с помощью Docker Compose
+### Запуск с помощью Docker Compose
 ```bash
 docker-compose -f compose/docker-compose.yml up -d
-
-docker run -it --rm --privileged \
-  -e NGROK_TOKEN=2xxBhSR3e2bXieUnf4xt2fkh1Rv_38cV14iqMtLzEAMtVekXg \
-  -p 3389:3389 \
-  freerdp:latest 
-
 ```
 
 ## Подключение
