@@ -1,35 +1,55 @@
-# Базовый образ Ubuntu 22.04
-FROM ubuntu:22.04
+# Базовый образ на основе Debian Bookworm
+FROM debian:bookworm
+
+LABEL maintainer="bludzetelksina"
+LABEL description="FreeRDP server with XRDP, VNC, noVNC, KVM support, and Terminal access"
 
 ENV DEBIAN_FRONTEND=noninteractive
 
-# Установка зависимостей и необходимых пакетов
-RUN apt-get update && apt-get install -y xrdp xfce4 xfce4-goodies
+# Обновление и установка необходимых пакетов
+RUN apt-get update && apt-get install -y \
+    xrdp \
+    xfce4 \
+    tightvncserver \
+    novnc \
+    websockify \
+    sudo \
+    curl \
+    wget \
+    git \
+    bash \
+    dbus-x11 \
+    net-tools \
+    iputils-ping \
+    qemu-kvm \
+    libvirt-daemon-system \
+    virtinst \
+    bridge-utils \
+    gnupg \
+    lsb-release \
+    systemd \
+    && apt-get clean && rm -rf /var/lib/apt/lists/*
 
-RUN apt-get update && apt-get install -y firefox wget curl
+# Добавляем пользователя с правами sudo
+RUN useradd -m -s /bin/bash user && echo "user:user" | chpasswd && adduser user sudo
 
-RUN apt-get update && apt-get install -y sudo unzip net-tools
-
-RUN apt-get update && apt-get install -y tigervnc-standalone-server novnc websockify
-
-RUN apt-get update && apt-get install -y git x11-xserver-utils dbus-x11 && apt-get clean && rm -rf /var/lib/apt/lists/*
-
-# Настройка XRDP
-RUN echo xfce4-session > ~/.xsession && \
-    sed -i.bak '/^test -x \/etc\/X11\/Xsession/ s/^/#/' /etc/xrdp/startwm.sh && \
-    echo "exec startxfce4" >> /etc/xrdp/startwm.sh
-
-# Настройка VNC
-RUN mkdir -p ~/.vnc && \
-    echo "#!/bin/sh\nstartxfce4 &" > ~/.vnc/xstartup && \
-    chmod +x ~/.vnc/xstartup
-
-# Копирование скрипта запуска
+# Копируем конфигурационные и стартовые файлы
 COPY docker/entrypoint.sh /usr/local/bin/entrypoint.sh
 RUN chmod +x /usr/local/bin/entrypoint.sh
 
-# Порт XRDP и noVNC
+# Копируем конфигурацию XRDP, если она есть
+# COPY ../config/xrdp.ini /etc/xrdp/xrdp.ini
+# COPY ../config/sesman.ini /etc/xrdp/sesman.ini
+
+# Порты: RDP (3389), VNC (5901), noVNC (6080)
 EXPOSE 3389 5901 6080
 
+# Установка noVNC (если не установлен через пакет)
+RUN git clone https://github.com/novnc/noVNC /opt/novnc \
+    && git clone https://github.com/novnc/websockify /opt/novnc/utils/websockify
+
+# Рабочая директория
+WORKDIR /home/user
+
 # Запуск скрипта
-CMD ["/entrypoint.sh"]
+CMD ["/usr/local/bin/entrypoint.sh"]
