@@ -32,6 +32,6 @@ EXPOSE 3389 6080 7681
 CMD ["/bin/bash", "-c", "\
     service dbus start && \
     service xrdp start && \
-    websockify --web=/usr/share/novnc/ 6080 localhost:5901 & \
+    websockify --web=/usr/share/novnc/vnc.html 6080 localhost:5901 & \
     ttyd -p 7681 bash & \
     tail -f /dev/null"]
