@@ -12,6 +12,7 @@ services:
     privileged: true  # Нужен для KVM и systemd
     environment:
       - TZ=UTC
+      - NGROK_TOKEN=
     volumes:
       - /lib/modules:/lib/modules:ro
       - /dev:/dev
