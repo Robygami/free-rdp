@@ -40,4 +40,6 @@ fi
 
 # Поддержание контейнера активным с терминалом
 echo "[entrypoint] Готово. Терминал доступен. Используйте 'docker exec -it <container> bash'"
+wait
+
 exec bash
