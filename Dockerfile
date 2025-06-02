@@ -4,19 +4,14 @@ FROM debian:bookworm
 ENV DEBIAN_FRONTEND=noninteractive
 
 # Обновление системы и установка необходимых пакетов
-RUN apt-get update && apt-get install -y qemu qemu-kvm libvirt-daemon-system libvirt-clients
-
-RUN apt-get update && apt-get install -y novnc websockify
-
-RUN apt-get update && apt-get install -y xfce4 xfce4-goodies xrdp
-
-RUN apt-get update && apt-get install -y xterm sudo wget curl
-
-RUN apt-get update && apt-get install -y ttyd
-
-RUN apt-get update && apt-get clean
-
-RUN apt-get update && rm -rf /var/lib/apt/lists/*
+RUN apt-get update && apt-get install -y \
+    qemu-kvm libvirt-daemon-system libvirt-clients \
+    novnc websockify \
+    xfce4 xfce4-goodies xrdp \
+    xterm sudo wget curl \
+    ttyd \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
 
 # Добавим пользователя для RDP
 RUN useradd -m -s /bin/bash rdpuser && \
