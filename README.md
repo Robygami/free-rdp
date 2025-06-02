@@ -15,17 +15,16 @@
 
 ## 📦 Установка
 
-### 1. Клонируйте репозиторий
+### 1. Сборка образа
 
 ```bash
-git clone https://github.com/bludzetelksina/free-rdp.git
-cd free-rdp
+docker build -t freerdp:latest -f Dockerfile .
 ```
 
 ### 2. Настройка Docker и запуск
 
 ```bash
-docker-compose up -d
+docker-compose -f docker-compose.yml up -d
 ```
 Docker автоматически загрузит образ и запустит необходимые сервисы.
 
