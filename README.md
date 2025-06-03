@@ -24,7 +24,7 @@ docker build -t free-rdp:latest -f docker/Dockerfile .
 ### 2. Настройка Docker и запуск
 
 ```bash
-docker-compose -f compose/docker-compose.yml up -d free-rdp:latest
+docker run -d --name free-rdp -p 3389:3389 -p 6080:6080 free-rdp:latest
 ```
 Docker автоматически загрузит образ и запустит необходимые сервисы.
 
