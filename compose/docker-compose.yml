@@ -1,0 +1,27 @@
+version: '3.8'
+
+services:
+  freerdp:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+    container_name: freerdp-container
+    restart: unless-stopped
+    ports:
+      - "3389:3389"   # XRDP RDP порт
+      - "6080:6080"   # noVNC веб-порт
+      - "7681:7681"   # ttyd веб-терминал
+    volumes:
+      - ./config:/etc/free-rdp  # Конфиги qemu-kvm.conf, novnc.conf, xrdp.ini и др.
+      - ./images:/var/lib/free-rdp/images  # Образы дисков для QEMU
+      - ./scripts:/opt/scripts  # Скрипты запуска, например entrypoint.sh
+    environment:
+      - DISPLAY=:1
+      - MEMORY=2048
+      - CPUS=2
+      - RDP_PORT=3389
+      - NOVNC_LISTEN_PORT=6080
+      - NOVNC_TARGET_HOST=localhost
+      - NOVNC_TARGET_PORT=5901
+      - NOVNC_WEB_PATH=/usr/share/novnc
+    entrypoint: /opt/scripts/entrypoint.sh
