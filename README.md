@@ -18,13 +18,13 @@
 ### 1. Сборка образа
 
 ```bash
-docker build -t free-rdp:latest -f Dockerfile .
+docker build -t free-rdp:latest -f docker/Dockerfile .
 ```
 
 ### 2. Настройка Docker и запуск
 
 ```bash
-docker-compose -f docker-compose.yml up -d
+docker-compose -f compose/docker-compose.yml up -d
 ```
 Docker автоматически загрузит образ и запустит необходимые сервисы.
 
