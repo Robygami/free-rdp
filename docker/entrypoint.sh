@@ -24,7 +24,7 @@ Xvnc :1 -geometry 1920x1080 -depth 24 -rfbauth /root/.vnc/passwd &
 VNC_PID=$!
 
 # Запускаем noVNC, проксируя VNC с дисплея :1 (порт 5901)
-websockify --web=/usr/share/novnc/ 6080 localhost:5901 --vnc &
+websockify --web=/usr/share/novnc/ 6080 localhost:5901 &
 
 NOVNC_PID=$!
 
