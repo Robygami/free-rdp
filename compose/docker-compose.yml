@@ -5,6 +5,7 @@ services:
     build:
       context: .
       dockerfile: docker/Dockerfile
+    image: free-rdp:latest
     container_name: freerdp-container
     restart: unless-stopped
     ports:
