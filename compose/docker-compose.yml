@@ -10,8 +10,7 @@ services:
     restart: unless-stopped
     ports:
       - "3389:3389"   # XRDP RDP порт
-      - "6080:6080"   # noVNC веб-порт
-      - "7681:7681"   # ttyd веб-терминал
+      - "6080:6080"   # noVNC порт
     volumes:
       - ./config:/etc/free-rdp  # Конфиги qemu-kvm.conf, novnc.conf, xrdp.ini и др.
       - ./images:/var/lib/free-rdp/images  # Образы дисков для QEMU
